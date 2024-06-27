@@ -3,6 +3,18 @@ import json
 import socket
 
 
+def get_external_ipv4_address():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # Connect to a public DNS server to get the external IP address
+        sock.connect(('8.8.8.8', 80))
+        ip_address = sock.getsockname()[0]
+    finally:
+        sock.close()
+    return ip_address
+
+
+
 def reliable_send(data):
     json_data = json.dumps(data)
     target.send(json_data.encode())
@@ -39,8 +51,11 @@ def server():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+    # GETS THE MACHINE LOCAL IP
+    ipv4 = get_external_ipv4_address()
+
     # BIND PORT
-    s.bind(("127.0.0.1", 12345))
+    s.bind((f"{ipv4}", 12345))
     s.listen(1)
     print("Listening for incoming connections...")
 
